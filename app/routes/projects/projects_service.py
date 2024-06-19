@@ -4,7 +4,15 @@ from app.dto.assignation import AssignDto
 from app.common.db_connectors.neo4j_conn import Neo4jConnector
 from typing import Dict
 
-
+async def findProjectService(project_id: str):
+    try:
+        connector = Neo4jConnector()
+        response = connector.get_node('Project', 'project_id', project_id)
+        return response
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
+    
 async def getProjectService():
     try:
         connector = Neo4jConnector()
@@ -14,10 +22,9 @@ async def getProjectService():
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
 
-async def getProjectColabService(query_params: Dict):
+async def getProjectColabService(project_id: str):
     try:
         connector = Neo4jConnector()
-        project_id = query_params['project_id']
         response = connector.get_nodes_with_indirect_relationship('User', 'TASK_ASSIGNED_TO', 'Task', 'PROJECT_HAS_TASK', 'Project','project_id', project_id)
         return response
     except Exception as e:
