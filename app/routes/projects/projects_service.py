@@ -71,15 +71,14 @@ async def updateProjectService(req: ProjectDto):
         return {"error": "Internal server error, please try again later."}
     
     
-async def addProjectTaskService(req: AssignDto):
+async def addProjectTaskService(req: AssignDto, project_id):
     try:
         connector = Neo4jConnector()
         params = req.dict()
-        start_node = params['start_node']
-        end_node = params['end_node']
+        end_node = params['related_to']
         relationship = 'PROJECT_HAS_TASK'
-        connector.create_relationship('Project', 'project_id', start_node, relationship,'Task', 'task_id', end_node)
-        return {"assignation": f'Project {start_node} -- {relationship} -- {end_node}'}
+        connector.create_relationship('Project', 'project_id', project_id, relationship,'Task', 'task_id', end_node)
+        return {"assignation": f'Project {project_id} -- {relationship} -- {end_node}'}
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}

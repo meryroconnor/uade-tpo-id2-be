@@ -13,6 +13,15 @@ async def getSkillsService():
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
+
+async def findSkillService(skill_id: str):
+    try:
+        connector = Neo4jConnector()
+        response = connector.get_node('Skill', 'skill_id', skill_id)
+        return response
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
     
 async def addSkillService(req: SkillDto):
     try:

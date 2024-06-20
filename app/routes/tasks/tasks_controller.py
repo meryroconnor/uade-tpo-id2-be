@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from app.dto.tasks import TasksDto
 from app.dto.assignation import AssignDto
 from typing import Optional, Dict
-from app.routes.tasks.tasks_service import addTaskService, getTasksService, updateTaskService, addTaskAssignationService, getTaskResponsibleService, getTaskCandidatesService
+from app.routes.tasks.tasks_service import addTaskService, getTasksService, updateTaskService, addTaskAssignationService, getTaskResponsibleService, getTaskCandidatesService, findTaskService
 
 router = APIRouter()
 entity = "tasks"
@@ -15,15 +15,7 @@ async def getTasks():
         raise HTTPException(status_code=500, detail=result["error"])
     return result
 
-@router.get("/reponsible", tags=[entity])
-async def getTaskResponsible(task_id: str = Query(...)):
-    query_params = {}
-    query_params["task_id"] = task_id
-    
-    result = await getTaskResponsibleService(query_params)
-    if "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
-    return result
+
 
 @router.get("/candidates", tags=[entity])
 async def getTaskCandidates(required_availability: int = Query(...), skill_id: str = Query(...)):
@@ -50,9 +42,24 @@ async def updateActivity(req: TasksDto):
         raise HTTPException(status_code=500, detail=result["error"])
     return result
 
-@router.post("/assign", tags=[entity])
-async def addTaskAssignation(req: AssignDto):
-    result = await addTaskAssignationService(req)
+@router.get("/{task_id}", tags=[entity])
+async def findTask(task_id: str):
+    result = await findTaskService(task_id)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
+
+@router.get("/{task_id}/reponsible", tags=[entity])
+async def getTaskResponsible(task_id: str):
+    
+    result = await getTaskResponsibleService(task_id)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
+
+@router.post("/{task_id}/assign", tags=[entity])
+async def addTaskAssignation(req: AssignDto, task_id):
+    result = await addTaskAssignationService(req, task_id)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result

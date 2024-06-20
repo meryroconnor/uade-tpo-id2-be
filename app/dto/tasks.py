@@ -9,7 +9,7 @@ def generate_date():
     return str(datetime.now())
 
 class TasksDto(BaseModel):
-    task_id: str
+    task_id: str = Field(default_factory=generate_uuid)
     title: str
     description: str
     duration: int

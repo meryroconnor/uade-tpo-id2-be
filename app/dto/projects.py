@@ -9,7 +9,7 @@ def generate_date():
     return str(datetime.now())
 
 class ProjectDto(BaseModel):
-    project_id: str
+    project_id: str = Field(default_factory=generate_uuid)
     title: str
     description: str
     creation_date: str = Field(default_factory=generate_date)

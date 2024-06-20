@@ -16,12 +16,6 @@ async def getProjects():
         raise HTTPException(status_code=500, detail=result["error"])
     return result
 
-@router.post("/assign", tags=[entity])
-async def addProjectTask(req: AssignDto):
-    result = await addProjectTaskService(req)
-    if "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
-    return result
 
 @router.get("/candidatesTasks", tags=[entity])
 async def getTaskCandidates():    
@@ -33,6 +27,13 @@ async def getTaskCandidates():
 @router.get("/{project_id}", tags=[entity])
 async def findProject(project_id: str):
     result = await findProjectService(project_id)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
+
+@router.post("/{project_id}/assign", tags=[entity])
+async def addProjectTask(req: AssignDto, project_id):
+    result = await addProjectTaskService(req, project_id)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result

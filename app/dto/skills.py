@@ -7,5 +7,5 @@ def generate_uuid():
 
 
 class SkillDto(BaseModel):
-    skill_id: str
+    skill_id: str  = Field(default_factory=generate_uuid)
     description: str

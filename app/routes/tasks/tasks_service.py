@@ -13,10 +13,18 @@ async def getTasksService():
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
     
-async def getTaskResponsibleService(query_params: Dict):
+async def findTaskService(task_id: str):
     try:
         connector = Neo4jConnector()
-        task_id = query_params['task_id']
+        response = connector.get_node('Task', 'task_id', task_id)
+        return response
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
+    
+async def getTaskResponsibleService(task_id):
+    try:
+        connector = Neo4jConnector()
         response = connector.get_nodes_with_direct_relationship('User', 'TASK_ASSIGNED_TO', 'Task','task_id', task_id)
         return response
     except Exception as e:
@@ -54,20 +62,19 @@ async def updateTaskService(req: TasksDto):
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
     
-async def addTaskAssignationService(req: AssignDto):
+async def addTaskAssignationService(req: AssignDto, task_id):
     try:
         connector = Neo4jConnector()
         params = req.dict()
-        start_node = params['start_node']
-        end_node = params['end_node']
+        end_node = params['related_to']
         relationship = 'TASK_ASSIGNED_TO'
         
         # Create Relationship
-        connector.create_relationship('Task', 'task_id', start_node, relationship, 'User', 'user_id', end_node)
+        connector.create_relationship('Task', 'task_id', task_id, relationship, 'User', 'user_id', end_node)
         
         # Retrieve the user's current availability and the task duration
         user_node = connector.get_node('User', 'user_id', end_node)['n']
-        task_node = connector.get_node('Task', 'task_id', start_node)['n']
+        task_node = connector.get_node('Task', 'task_id', task_id)['n']
         user_availability = user_node['availability']
         task_duration = task_node['duration']
         
@@ -77,7 +84,7 @@ async def addTaskAssignationService(req: AssignDto):
         # Update the user's availability
         connector.update_node('User', 'user_id', end_node, {'availability': new_availability})
         
-        return {"assignation": f'User {end_node} -- {relationship} -- {start_node}'}
+        return {"assignation": f'User {end_node} -- {relationship} -- {task_id}'}
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}

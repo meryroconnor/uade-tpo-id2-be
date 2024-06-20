@@ -13,6 +13,15 @@ async def getProfileService():
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
+
+async def findProfileService(user_id: str):
+    try:
+        connector = Neo4jConnector()
+        response = connector.get_node('User', 'user_id', user_id)
+        return response
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
     
 async def addProfileService(req: ProfileDto):
     try:
@@ -35,15 +44,14 @@ async def updateProfileService(req: ProfileDto):
         return {"error": "Internal server error, please try again later."}
     
     
-async def addProfileSkillService(req: AssignDto):
+async def addProfileSkillService(req: AssignDto, user_id):
     try:
         connector = Neo4jConnector()
         params = req.dict()
-        start_node = params['start_node']
-        end_node = params['end_node']
+        end_node = params['related_to']
         relationship = 'HAS_SKILL'
-        connector.create_relationship('User', 'user_id', start_node, relationship,'Skill', 'skill_id', end_node)
-        return {"assignation": f'User {start_node} -- {relationship} --> {end_node}'}
+        connector.create_relationship('User', 'user_id', user_id, relationship,'Skill', 'skill_id', end_node)
+        return {"assignation": f'User {user_id} -- {relationship} --> {end_node}'}
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}

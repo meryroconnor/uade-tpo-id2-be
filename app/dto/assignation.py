@@ -9,5 +9,4 @@ def generate_date():
     return str(datetime.now())
 
 class AssignDto(BaseModel):
-    start_node: str
-    end_node: str
+    related_to: str
