@@ -31,10 +31,9 @@ async def getProjectColabService(project_id: str):
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
 
-async def getProjectTasksService(query_params: Dict):
+async def getProjectTasksService(project_id):
     try:
         connector = Neo4jConnector()
-        project_id = query_params['project_id']
         response = connector.get_nodes_with_direct_relationship('Task', 'PROJECT_HAS_TASK', 'Project','project_id', project_id)
         return response
     except Exception as e:

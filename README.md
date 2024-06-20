@@ -50,3 +50,7 @@ JWT_EXP_MINUTES="10"
 python main.py
 python3 main.py
 ```
+
+## Ver Swagger
+
+http://localhost:8081/docs
