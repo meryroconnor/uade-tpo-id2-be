@@ -14,8 +14,8 @@ pip install python-decouple
 pip install pyjwt
 pip install mysql-connector-python
 ```
-## 2. Automated
-or create a virtuan environment, activate it and run 
+## 2. Automatizada
+or crear a virtual environment, activarlo y ejecutar 
 ```bash 
 pip install -r requirements.txt
 ```
