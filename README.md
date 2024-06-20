@@ -3,7 +3,7 @@
 # TPO Ingeniería de Datos 2
 
 ## Instalación de dependencias:
-
+## 1. Manual
 ```bash
 pip install uvicorn
 pip install fastapi
@@ -13,7 +13,11 @@ pip install neo4j
 pip install python-decouple
 pip install pyjwt
 pip install mysql-connector-python
-
+```
+## 2. Automated
+or create a virtuan environment, activate it and run 
+```bash 
+pip install -r requirements.txt
 ```
 
 ## Para conectar a base de datos
