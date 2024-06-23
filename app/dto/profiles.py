@@ -11,5 +11,5 @@ class ProfileDto(BaseModel):
     user_name: str
     description: str
     availability: int
-    image: str = Field( default="")
+    image: str = Field( default="https://cdn-icons-png.flaticon.com/512/219/219969.png")
     # birth_date: str 
