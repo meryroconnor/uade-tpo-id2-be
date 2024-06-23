@@ -4,7 +4,7 @@ from app.dto.assignation import AssignDto
 from app.dto.projects import ProjectDto
 
 from typing import Optional, Dict
-from app.routes.projects.projects_service import findProjectService, addProjectService, getProjectService, updateProjectService, addProjectTaskService, getProjectColabService, getProjectTasksService,getCandidateTasksService
+from app.routes.projects.projects_service import deleteProjectService, findProjectService, addProjectService, getProjectService, updateProjectService, addProjectTaskService, getProjectColabService, getProjectTasksService,getCandidateTasksService
 
 router = APIRouter()
 entity = "projects"
@@ -27,6 +27,13 @@ async def getTaskCandidates():
 @router.get("/{project_id}", tags=[entity])
 async def findProject(project_id: str):
     result = await findProjectService(project_id)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
+
+@router.delete("/{project_id}", tags=[entity])
+async def deleteProject(project_id: str):
+    result = await deleteProjectService(project_id)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result

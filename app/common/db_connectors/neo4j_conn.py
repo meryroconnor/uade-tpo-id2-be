@@ -50,7 +50,8 @@ class Neo4jConnector:
 
     def delete_node(self, label, key, value):
         with self.driver.session() as session:
-            session.write_transaction(self._delete_node, label, key, value)
+            result = session.write_transaction(self._delete_node, label, key, value)
+            return result
     def create_relationship(self, start_node_label, start_node_key, start_node_value, 
                             relationship_type, end_node_label, end_node_key, end_node_value, 
                             properties=None):
@@ -126,6 +127,7 @@ class Neo4jConnector:
     def _delete_node(tx, label, key, value):
         query = f"MATCH (n:{label} {{{key}: ${key}}}) DETACH DELETE n"
         tx.run(query, {key: value})
+        return True
 
     @staticmethod
     def _create_relationship(tx, start_node_label, start_node_key, start_node_value, 

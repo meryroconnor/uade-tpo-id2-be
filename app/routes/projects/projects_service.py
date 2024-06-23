@@ -12,6 +12,19 @@ async def findProjectService(project_id: str):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
+
+async def deleteProjectService(project_id: str):
+    try:
+        connector = Neo4jConnector()
+        response = connector.delete_node('Project', 'project_id', project_id)
+        print(f"Response from Neo4j: {response}")
+        if response:
+            return {"success": f"Project {project_id} deleted successfully."}
+        else:
+            return {"error": f"Project {project_id} could not be deleted."}
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
     
 async def getProjectService():
     try:
