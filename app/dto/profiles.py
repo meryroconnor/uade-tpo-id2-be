@@ -11,5 +11,5 @@ class ProfileDto(BaseModel):
     user_name: str
     description: str
     availability: int
-    image: str
-    birth_date: str 
+    image: str = Field( default="")
+    # birth_date: str 
