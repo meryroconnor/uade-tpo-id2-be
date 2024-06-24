@@ -69,8 +69,8 @@ async def updateProject(req: ProjectDto):
     return result
 
 @router.post("/", tags=[entity])
-async def addProject(req: ProjectDto):
-    result = await addProjectService(req)
+async def addProject(req: ProjectDto, user_id:str):
+    result = await addProjectService(req, user_id)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from app.dto.tasks import TasksDto
 from app.dto.assignation import AssignDto
 from typing import Optional, Dict
-from app.routes.tasks.tasks_service import addTaskService, getTasksService, updateTaskService, addTaskAssignationService, getTaskResponsibleService, getTaskCandidatesService, findTaskService
+from app.routes.tasks.tasks_service import deleteTaskService, addTaskService, getTasksService, updateTaskService, addTaskAssignationService, getTaskResponsibleService, getTaskCandidatesService, findTaskService
 
 router = APIRouter()
 entity = "tasks"
@@ -45,6 +45,13 @@ async def updateActivity(req: TasksDto):
 @router.get("/{task_id}", tags=[entity])
 async def findTask(task_id: str):
     result = await findTaskService(task_id)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
+
+@router.delete("/{task_id}", tags=[entity])
+async def deleteTask(task_id: str):
+    result = await deleteTaskService(task_id)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result

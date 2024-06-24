@@ -22,6 +22,19 @@ async def findTaskService(task_id: str):
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
     
+async def deleteTaskService(task_id: str):
+    try:
+        connector = Neo4jConnector()
+        response = connector.delete_node('Task', 'task_id', task_id)
+        print(f"Response from Neo4j: {response}")
+        if response:
+            return {"success": f"Task {task_id} deleted successfully."}
+        else:
+            return {"error": f"Task {task_id} could not be deleted."}
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
+    
 async def getTaskResponsibleService(task_id):
     try:
         connector = Neo4jConnector()

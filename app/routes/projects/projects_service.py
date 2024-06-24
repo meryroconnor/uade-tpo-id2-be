@@ -62,11 +62,13 @@ async def getCandidateTasksService():
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
     
-async def addProjectService(req: ProjectDto):
+async def addProjectService(req: ProjectDto, user_id: str):
     try:
+        params = req.dict()
         connector = Neo4jConnector()
         connector.create_node('Project', req.dict())
         #TO DO: crear la relacion OWNS con el user que ejecuto la creacion del proyecto
+        connector.create_relationship('User', 'user_id', user_id, 'OWNS_PROJECT', 'Project', 'project_id', params['project_id'])
         return {"inserted_id": req.dict()}
     except Exception as e:
         print(f"Unexpected error: {e}")
