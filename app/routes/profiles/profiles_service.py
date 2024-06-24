@@ -55,3 +55,12 @@ async def addProfileSkillService(req: AssignDto, user_id):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"error": "Internal server error, please try again later."}
+    
+async def getProfileSkillsService(user_id):
+    try:
+        connector = Neo4jConnector()
+        response = connector.get_nodes_with_direct_relationship('Skill', 'HAS_SKILL', 'User','user_id', user_id)
+        return response
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": "Internal server error, please try again later."}
