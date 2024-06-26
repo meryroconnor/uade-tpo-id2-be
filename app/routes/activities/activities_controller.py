@@ -9,7 +9,7 @@ router = APIRouter()
 entity = "activities"
 
 @router.get("/", tags=[entity])
-async def getActivities(user_id: Optional[int] = Query(None), task_id: Optional[str] = Query(None), project_id: Optional[str] = Query(None)):
+async def getActivities(user_id: Optional[str] = Query(None), task_id: Optional[str] = Query(None), project_id: Optional[str] = Query(None)):
     query_params = {}
     if user_id is not None:
         query_params["user_id"] = user_id

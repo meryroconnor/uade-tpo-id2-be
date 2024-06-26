@@ -11,7 +11,7 @@ def generate_date():
 class ActivitiesDto(BaseModel):
     project_id: str
     task_id: str
-    user_id: int
+    user_id: str
     comment: str
     likes: list = list()
     date: str = Field(default_factory=generate_date)
