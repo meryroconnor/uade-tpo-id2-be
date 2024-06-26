@@ -176,7 +176,7 @@ class Neo4jConnector:
     def _get_nodes_with_indirect_relationship(tx, node_label, intermediate_relationship_type, intermediate_node_label, relationship_type, related_node_label,related_node_property_key, related_node_property_value):
         query = (f"MATCH (n:{node_label})-[ri:{intermediate_relationship_type}]-(i:{intermediate_node_label}) "
                  f"-[r:{relationship_type}]-(m:{related_node_label} {{{related_node_property_key}: $related_node_property_value}}) "                 
-                 f"RETURN n")
+                 f"RETURN collect(distinct n) as n")
         result = tx.run(query, { "related_node_property_value": related_node_property_value})
         return [record["n"] for record in result]
     @staticmethod
